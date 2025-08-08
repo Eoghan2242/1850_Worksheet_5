@@ -31,10 +31,8 @@ Your code will only be tested on valid files in the format shown in the 4 exampl
 '''
 import csv
 
-input_file = input("Please enter the name of the file: ")
-output_file = input_file + "_out.csv"
+def calculate_classification(average_grade):
 
-def calculate_grade(average_grade):
     if average_grade >= 70:
         return "1"
     elif average_grade >= 60:
@@ -45,28 +43,70 @@ def calculate_grade(average_grade):
         return "3"
     else:
         return "F"
+
+def process_student_grades(filename):
     
-#reads the csv file
-with open(input_file, newline='') as csvfile:
-    reader = csv.reader(csvfile)
-    output_data = []
+    output_filename = filename + "_out.csv"
+    
+    try:
+        
+        with open(filename, 'r', newline='') as infile, \
+             open(output_filename, 'w', newline='') as outfile:
+            
+            reader = csv.reader(infile)
+            writer = csv.writer(outfile)
+            
+           
+            writer.writerow(['student_id', 'average_grade', 'classification'])
+            
+           
+            for row in reader:
+                if not row: 
+                    continue
+                
+               
+                if row[0].lower().startswith('student_id'):
+                    continue
+                student_id = row[0]
+                
+                
+                grades = []
+                for grade_str in row[1:]:
+                   
+                    if grade_str and grade_str.strip():
+                        try:
+                           
+                            clean_grade = grade_str.strip().rstrip('.')
+                            grades.append(float(clean_grade))
+                        except ValueError:
+                            
+                            continue
+                
+                
+                if grades: 
+                    average_grade = sum(grades) / len(grades)
+                    
+                    
+                    classification = calculate_classification(average_grade)
+                    
+                    
+                    writer.writerow([student_id, f"{average_grade:.2f}", classification])
+        
+        print(f"\nProcessing complete! Results written to: {output_filename}")
+        
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
+    except Exception as e:
+        print(f"Error processing file: {e}")
 
-    for row in reader:
-        student_id = row[0]
-        grades = [int(grade) for grade in row[1:] if grade.strip() != '']
-        if grades:
-            average = sum(grades) / len(grades)
-        else:
-            average = 0.0  
+def main():
+    filename = input("Enter the filename of the student data file: ").strip()
+    
+    if filename:
+        process_student_grades(filename)
+    else:
+        print("No filename provided. Exiting.")
 
-        classification = calculate_grade(average)
-        output_data.append([student_id, f"{average:.2f}", classification])
-
-#writes the output csv file
-with open(output_file, 'w', newline='') as outfile:
-    writer = csv.writer(outfile)
-    for row in output_data:
-        writer.writerow(row)
 
 
     
