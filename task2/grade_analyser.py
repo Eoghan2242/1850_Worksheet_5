@@ -67,3 +67,7 @@ with open(output_file, 'w', newline='') as outfile:
     writer = csv.writer(outfile)
     for row in output_data:
         writer.writerow(row)
+
+
+    
+
