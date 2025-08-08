@@ -32,7 +32,6 @@ Your code will only be tested on valid files in the format shown in the 4 exampl
 import csv
 
 def calculate_classification(average_grade):
-
     if average_grade >= 70:
         return "1"
     elif average_grade >= 60:
@@ -45,52 +44,38 @@ def calculate_classification(average_grade):
         return "F"
 
 def process_student_grades(filename):
-    
     output_filename = filename + "_out.csv"
     
     try:
-        
         with open(filename, 'r', newline='') as infile, \
              open(output_filename, 'w', newline='') as outfile:
             
             reader = csv.reader(infile)
             writer = csv.writer(outfile)
             
-           
-            writer.writerow(['student_id', 'average_grade', 'classification'])
-            
-           
             for row in reader:
-                if not row: 
+                if not row:
                     continue
                 
-               
                 if row[0].lower().startswith('student_id'):
                     continue
-                student_id = row[0]
                 
+                student_id = row[0]
                 
                 grades = []
                 for grade_str in row[1:]:
-                   
                     if grade_str and grade_str.strip():
                         try:
-                           
                             clean_grade = grade_str.strip().rstrip('.')
                             grades.append(float(clean_grade))
                         except ValueError:
-                            
                             continue
                 
-                
-                if grades: 
+                if grades:
                     average_grade = sum(grades) / len(grades)
-                    
-                    
                     classification = calculate_classification(average_grade)
-                    
-                    
                     writer.writerow([student_id, f"{average_grade:.2f}", classification])
+                    print(f"Processed student {student_id}: Average = {average_grade:.2f}, Classification = {classification}")
         
         print(f"\nProcessing complete! Results written to: {output_filename}")
         
@@ -100,6 +85,7 @@ def process_student_grades(filename):
         print(f"Error processing file: {e}")
 
 def main():
+    
     filename = input("Enter the filename of the student data file: ").strip()
     
     if filename:
@@ -109,7 +95,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
     
