@@ -1,3 +1,4 @@
+'''
 Portfolio Task - Grade Analyser
 
 In order to decide student's overall classification, the university needs to take an overall mean average of their grades across all modules.
