@@ -107,6 +107,9 @@ def main():
     else:
         print("No filename provided. Exiting.")
 
+if __name__ == "__main__":
+    main()
+
 
 
     
